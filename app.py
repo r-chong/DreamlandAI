@@ -65,7 +65,7 @@ overall_chain = SequentialChain(
 # -------------------
 
 # Display
-st.title('🌈🏰🌟 Dreamland GPT')
+st.title('🌈🏰🌟 StoryBook GPT')
 prompt = st.text_input('Plug your story idea in here')
 st.divider()
 if prompt:
@@ -75,9 +75,8 @@ if prompt:
 	with intro_container.container():
 		st.write(exposition)
 	
-	time.sleep(12)
+	time.sleep(5)
 	intro_container.empty()
-
 	prev_state=exposition
 
 	# bulk of the story
@@ -93,14 +92,11 @@ if prompt:
 
 			if st.button(arr[1], key=uuid.uuid4()):
 				st.write(f"{arr[1]} clicked!")
-			
+
 			if st.button(arr[2], key=uuid.uuid4()):
 				st.write(f"{arr[2]} clicked!")
-			
-			user_choice = st.text_input("",placeholder='What will you do next?', key=uuid.uuid4())
+
+		user_choice = st.text_input("",placeholder='What will you do next?', key=uuid.uuid4())
 		prev_state=response
 		time.sleep(12)
-		placeholder.empty()
-		
-
 
