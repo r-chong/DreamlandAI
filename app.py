@@ -37,14 +37,14 @@ middle_template = PromptTemplate(
 	# referenced as {current_state}
 	input_variables  = ['prev_state'],
 	template="""Based on what happened in {prev_state}, write a second-person description of what happens next in the story. Do not attempt to end the story.
-		Then give the user three decisions the user can make based on the current state of the story.
 	""",
 	validate_template=False
 )
 
 format_decision_template = PromptTemplate(
 	input_variables=['current_state'],
-	template="""format the decisions in {current_state} as a list of three choices, each separated by a comma. For example, if the decisions are "go left", "go right", and "go straight", then the format should be: go left, go right, go straight
+	template="""Based on {current_state}, create a list of three choices for what the user can do next, each separated by a |. For example, if the decisions are "go left", "go right", and "go straight", then the format should be: 
+	Go left|Go right|Go straight
 	"""
 )
 
@@ -64,26 +64,6 @@ overall_chain = SequentialChain(
 
 # -------------------
 
-def continue_story(prev_state, isExposition):
-	placeholder = st.empty()
-
-	response = overall_chain({'prev_state':prev_state})
-	st.write(response['current_state'])
-	arr = response['decisions'].split(", ")
-
-	if isExposition == False:
-		with placeholder.container():
-			if st.button(arr[0], key=uuid.uuid4()):
-				st.write(f"{arr[0]} clicked!")
-
-			if st.button(arr[1], key=uuid.uuid4()):
-				st.write(f"{arr[1]} clicked!")
-			
-			if st.button(arr[2], key=uuid.uuid4()):
-				st.write(f"{arr[2]} clicked!")
-
-	prev_state=response
-
 # Display
 st.title('🌈🏰🌟 Dreamland GPT')
 prompt = st.text_input('Plug your story idea in here')
@@ -97,13 +77,21 @@ if prompt:
 
 	# bulk of the story
 	for i in range(5):
-		if i == 0:
-			continue_story(prev_state,True)
-		else:
-			continue_story(prev_state,False)
+		response = overall_chain({'prev_state':prev_state})
+		st.write(response['current_state'])
+		arr = response['decisions'].split("|")
 		placeholder = st.empty()
-		user_choice = st.text_input("",placeholder='What will you do next?', key=uuid.uuid4())
+		with placeholder.container():
+			if st.button(arr[0], key=uuid.uuid4()):
+				st.write(f"{arr[0]} clicked!")
 
+			if st.button(arr[1], key=uuid.uuid4()):
+				st.write(f"{arr[1]} clicked!")
+			
+			if st.button(arr[2], key=uuid.uuid4()):
+				st.write(f"{arr[2]} clicked!")
+		user_choice = st.text_input("",placeholder='What will you do next?', key=uuid.uuid4())
+		prev_state=response
 	
 
 
