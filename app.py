@@ -35,8 +35,8 @@ middle_template = PromptTemplate(
 	# it will be called after the exposition and after each continuation until the middle of the story ends
 	# ------------------
 	# referenced as {current_state}
-	input_variables  = ['prev_state'],
-	template="""Based on what happened in {prev_state}, write a second-person description of what happens next in the story. Do not attempt to end the story.
+	input_variables  = ['prev_state','user_choice'],
+	template="""Based on what happened in {prev_state}, and the user's decision of {user_choice}. write a second-person description of what happens next in the story. Do not attempt to end the story.
 	""",
 	validate_template=False
 )
@@ -57,7 +57,7 @@ format_decision_chain = LLMChain(llm=llm,prompt=format_decision_template,verbose
 
 overall_chain = SequentialChain(
 	chains=[middle_chain,format_decision_chain],
-	input_variables=['prev_state'],
+	input_variables=['prev_state','user_choice'],
 	output_variables=['current_state','decisions'],
 	verbose=True,
 )
@@ -76,14 +76,15 @@ if prompt:
 		st.write(exposition)
 	
 	time.sleep(5)
-	intro_container.empty()
 	prev_state=exposition
+	user_choice=""
 
 	# bulk of the story
 	for i in range(5):
-		response = overall_chain({'prev_state':prev_state})
+		response = overall_chain({'prev_state':prev_state,'user_choice':user_choice})
 		arr = response['decisions'].split("|")
 		placeholder = st.empty()
+		
 		with placeholder.container():
 			st.write(response['current_state'])
 
