@@ -7,6 +7,8 @@ from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain, SequentialChain, SimpleSequentialChain
 import time
+import uuid
+
 
 st.set_page_config(page_title="StoryBookGPT", page_icon="🏰", layout="wide")
 hide_streamlit_style = """
@@ -36,9 +38,6 @@ middle_template = PromptTemplate(
 	input_variables  = ['prev_state'],
 	template="""Based on what happened in {prev_state}, write a second-person description of what happens next in the story. Do not attempt to end the story.
 		Then give the user three decisions the user can make based on the current state of the story.
-
-		The format should follow this example:
-		[decision1] [decision2] [decision3]
 	""",
 	validate_template=False
 )
@@ -63,10 +62,27 @@ overall_chain = SequentialChain(
 	verbose=True,
 )
 
+# -------------------
 
-# response = middle_chain.run(prev_state="You are a survivor in a zombie apocalypse. You are in a house with a group of survivors. Your last decision was to go to the basement.",verbose=True)
-# st.write("This is the current state\n" + response)
-# prev_state=response
+def continue_story(prev_state, isExposition):
+	placeholder = st.empty()
+
+	response = overall_chain({'prev_state':prev_state})
+	st.write(response['current_state'])
+	arr = response['decisions'].split(", ")
+
+	if isExposition == False:
+		with placeholder.container():
+			if st.button(arr[0], key=uuid.uuid4()):
+				st.write(f"{arr[0]} clicked!")
+
+			if st.button(arr[1], key=uuid.uuid4()):
+				st.write(f"{arr[1]} clicked!")
+			
+			if st.button(arr[2], key=uuid.uuid4()):
+				st.write(f"{arr[2]} clicked!")
+
+	prev_state=response
 
 # Display
 st.title('🌈🏰🌟 Dreamland GPT')
@@ -75,21 +91,19 @@ if prompt:
 	# introduction
 	exposition = intro_chain.run(story_concept=prompt)
 	st.write("This is the opening crawl\n" + exposition)
+	st.divider()
 
 	prev_state=exposition
 
-	# middle
 	# bulk of the story
 	for i in range(5):
-		response = overall_chain({'prev_state':prev_state})
-		st.write(response['current_state'])
-		arr = response['decisions'].split(", ")
-		for decision in arr:
-			if st.button(decision):
-				st.write(f"{decision} clicked!")
-		time.sleep(5)
-		prev_state=response
+		if i == 0:
+			continue_story(prev_state,True)
+		else:
+			continue_story(prev_state,False)
+		placeholder = st.empty()
+		user_choice = st.text_input("",placeholder='What will you do next?', key=uuid.uuid4())
 
-	user_choice = st.text_input("",placeholder='What will you do next?')
+	
 
 
