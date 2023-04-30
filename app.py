@@ -67,21 +67,27 @@ overall_chain = SequentialChain(
 # Display
 st.title('🌈🏰🌟 Dreamland GPT')
 prompt = st.text_input('Plug your story idea in here')
+st.divider()
 if prompt:
 	# introduction
 	exposition = intro_chain.run(story_concept=prompt)
-	st.write("This is the opening crawl\n" + exposition)
-	st.divider()
+	intro_container = st.empty()
+	with intro_container.container():
+		st.write(exposition)
+	
+	time.sleep(12)
+	intro_container.empty()
 
 	prev_state=exposition
 
 	# bulk of the story
 	for i in range(5):
 		response = overall_chain({'prev_state':prev_state})
-		st.write(response['current_state'])
 		arr = response['decisions'].split("|")
 		placeholder = st.empty()
 		with placeholder.container():
+			st.write(response['current_state'])
+
 			if st.button(arr[0], key=uuid.uuid4()):
 				st.write(f"{arr[0]} clicked!")
 
@@ -90,8 +96,11 @@ if prompt:
 			
 			if st.button(arr[2], key=uuid.uuid4()):
 				st.write(f"{arr[2]} clicked!")
-		user_choice = st.text_input("",placeholder='What will you do next?', key=uuid.uuid4())
+			
+			user_choice = st.text_input("",placeholder='What will you do next?', key=uuid.uuid4())
 		prev_state=response
-	
+		time.sleep(12)
+		placeholder.empty()
+		
 
 
