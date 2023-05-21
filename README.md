@@ -20,4 +20,5 @@ To run the game, follow these steps:
 1. Clone the repository to your local machine using `git clone https://github.com/r-chong/DreamlandAI.git`.
 2. Navigate to the directory of the game using `cd StorytellerGPT`.
 4. Run script `python app.py`
-5. Visit localhost:8501
+5. Install dependencies
+6. Visit localhost:8501
