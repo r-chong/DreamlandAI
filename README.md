@@ -17,8 +17,7 @@ Working with Langchain has been a great experience. The library offers an intuit
 ## How to Run
 To run the game, follow these steps:
 
-1. Clone the repository to your local machine using `git clone <repo-link>`.
-2. Navigate to the directory of the game using `cd <directory-name>`.
-3. Install the required dependencies using `pip install -r requirements.txt`.
+1. Clone the repository to your local machine using `git clone https://github.com/r-chong/DreamlandAI.git`.
+2. Navigate to the directory of the game using `cd StorytellerGPT`.
 4. Run script `python app.py`
 5. Visit localhost:8501
