@@ -3,9 +3,6 @@ Generative AI choose-your-own-adventure game. Story progresses as you make decis
 
 ![StorytellerGPT-3](https://github.com/r-chong/DreamlandAI/assets/75395781/b7b97dce-b1ae-46d9-84f2-13e26bc79839)
 
-
-### Video Demo --> https://youtu.be/s1WQfYm2_Uw
-
 ## Final Features:
 1. **Dynamic Story Progression:** As you make choices, the story will evolve in real time, giving you a unique experience each time you play the game.
 2. **Streamlit Interface:** The game's interface is built using Streamlit, which provides an intuitive and interactive environment for playing the game.
